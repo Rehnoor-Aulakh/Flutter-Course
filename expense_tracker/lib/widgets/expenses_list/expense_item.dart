@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 
 class ExpenseItem extends StatelessWidget {
   final Expense expense;
-  ExpenseItem(this.expense, {super.key});
+  const ExpenseItem(this.expense, {super.key});
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.purple,
+      color: Color.fromARGB(255, 202, 45, 230),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         child: Column(
@@ -15,21 +15,28 @@ class ExpenseItem extends StatelessWidget {
           children: [
             Text(
               expense.title,
-              style: const TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.white, fontSize: 16),
             ),
             const SizedBox(height: 4),
             Row(
               children: [
                 Text(
                   '₹${expense.amount.toStringAsFixed(2)}',
+                  style: TextStyle(color: Colors.white),
                 ),
                 // spacer will take all the space between the Text and the Row
                 const Spacer(),
                 Row(
                   children: [
-                    Icon(CategoryIcons[expense.category]),
+                    Icon(
+                      CategoryIcons[expense.category],
+                      color: Colors.white,
+                    ),
                     const SizedBox(width: 8),
-                    Text(expense.formattedDate)
+                    Text(
+                      expense.formattedDate,
+                      style: const TextStyle(color: Colors.white),
+                    )
                   ],
                 )
               ],
