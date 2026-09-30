@@ -6,7 +6,9 @@ import 'package:google_fonts/google_fonts.dart';
 class QuestionsScreen extends StatefulWidget {
   // accept a positional argument of choosing the answer
   void Function(String) onSelectAnswer;
-  QuestionsScreen({super.key, required this.onSelectAnswer});
+  void Function() switchScreen;
+  QuestionsScreen(
+      {super.key, required this.onSelectAnswer, required this.switchScreen});
   @override
   State<StatefulWidget> createState() {
     return _QuestionsScreenState();
@@ -17,7 +19,12 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
   void answerQuestion(String selectedAnswer) {
     widget.onSelectAnswer(selectedAnswer);
     setState(() {
-      currentQuestionIndex++;
+      if (currentQuestionIndex + 1 == questions.length) {
+        // show the results screen
+        widget.switchScreen();
+      } else {
+        currentQuestionIndex++;
+      }
     });
   }
 

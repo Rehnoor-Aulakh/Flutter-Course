@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_quiz/questions_screen.dart';
+import 'package:flutter_quiz/results_screen.dart';
 import 'package:flutter_quiz/start_screen.dart';
 
 class Quiz extends StatefulWidget {
@@ -13,18 +14,23 @@ class Quiz extends StatefulWidget {
 
 class _QuizState extends State<Quiz> {
   final List<String> selectedAnswers = [];
-  Widget? activeScreen;
+  String? activeScreen;
+  Widget? activeScreenWidget;
 
   @override
   void initState() {
-    activeScreen = StartScreen(switchScreen);
+    activeScreen = "start-screen";
     super.initState();
   }
 
   void switchScreen() {
     setState(() {
       // we need to pass in the choose answers to the next page
-      activeScreen = QuestionsScreen(onSelectAnswer: chooseAnswer);
+      if (activeScreen == "questions-screen") {
+        activeScreen = "results-screen";
+      } else if (activeScreen == "start-screen") {
+        activeScreen = "questions-screen";
+      }
     });
   }
 
@@ -34,10 +40,20 @@ class _QuizState extends State<Quiz> {
 
   @override
   Widget build(BuildContext context) {
+    if (activeScreen == "start-screen") {
+      activeScreenWidget = StartScreen(switchScreen);
+    } else if (activeScreen == "questions-screen") {
+      activeScreenWidget = QuestionsScreen(
+        onSelectAnswer: chooseAnswer,
+        switchScreen: switchScreen,
+      );
+    } else if (activeScreen == "results-screen") {
+      activeScreenWidget = ResultsScreen(selectedAnswers: selectedAnswers);
+    }
     return MaterialApp(
       home: Scaffold(
         backgroundColor: const Color.fromARGB(255, 24, 2, 85),
-        body: Center(child: activeScreen),
+        body: Center(child: activeScreenWidget),
       ),
     );
   }
