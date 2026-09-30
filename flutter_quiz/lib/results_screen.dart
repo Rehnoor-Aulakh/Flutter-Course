@@ -5,7 +5,9 @@ import 'package:flutter_quiz/models/quiz_question.dart';
 
 class ResultsScreen extends StatelessWidget {
   List<String> selectedAnswers;
-  ResultsScreen({super.key, required this.selectedAnswers});
+  void Function() restartQuiz;
+  ResultsScreen(
+      {super.key, required this.selectedAnswers, required this.restartQuiz});
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +49,7 @@ class ResultsScreen extends StatelessWidget {
           const SizedBox(
             height: 30,
           ),
-          ElevatedButton(onPressed: () {}, child: Text("Restart Quiz"))
+          ElevatedButton(onPressed: restartQuiz, child: Text("Restart Quiz"))
         ],
       ),
     );
