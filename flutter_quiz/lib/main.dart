@@ -1,25 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_quiz/quiz.dart';
+import 'package:flutter_quiz/start_screen.dart';
 
 void main() {
-  runApp(
-    MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.deepPurpleAccent,
-        body: Center(
-          child: Column(
-            children: [
-              Image.asset("assets/images/quiz-logo.png"),
-              const SizedBox(
-                height: 25,
-              ),
-              const Text(
-                "Learn Flutter the fun way!",
-                style: TextStyle(color: Colors.white),
-              )
-            ],
-          ),
-        ),
-      ),
-    ),
-  );
+  runApp(Quiz());
 }
