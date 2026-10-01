@@ -7,7 +7,6 @@ class ExpenseItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Color.fromARGB(255, 202, 45, 230),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         child: Column(
@@ -15,14 +14,13 @@ class ExpenseItem extends StatelessWidget {
           children: [
             Text(
               expense.title,
-              style: const TextStyle(color: Colors.white, fontSize: 16),
+              style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 4),
             Row(
               children: [
                 Text(
                   '₹${expense.amount.toStringAsFixed(2)}',
-                  style: TextStyle(color: Colors.white),
                 ),
                 // spacer will take all the space between the Text and the Row
                 const Spacer(),
@@ -30,12 +28,10 @@ class ExpenseItem extends StatelessWidget {
                   children: [
                     Icon(
                       CategoryIcons[expense.category],
-                      color: Colors.white,
                     ),
                     const SizedBox(width: 8),
                     Text(
                       expense.formattedDate,
-                      style: const TextStyle(color: Colors.white),
                     )
                   ],
                 )
