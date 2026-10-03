@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shopping_list/data/categories.dart';
+import 'package:shopping_list/models/category.dart';
+import 'package:shopping_list/models/grocery_item.dart';
 
 class NewItem extends StatefulWidget {
   const NewItem({super.key});
@@ -14,9 +16,23 @@ class _NewItemState extends State<NewItem> {
   final _formKey = GlobalKey<FormState>();
   // this is to make sure that if the widget rebuilds, then the form does not lose its state.
 
+  var _enteredName = "";
+  var _enteredQuantity = 1;
+  var _selectedCategory = categories[Categories.vegetables]!;
+
   void _saveItem() {
     // trigger validation
-    _formKey.currentState!.validate();
+    if (_formKey.currentState!.validate()) {
+      // if validation succeeds then call the save method, that will trigger the onSave of TextFormField
+      _formKey.currentState!.save();
+      Navigator.of(context).pop(
+        GroceryItem(
+            id: DateTime.now().toString(),
+            name: _enteredName,
+            quantity: _enteredQuantity,
+            category: _selectedCategory),
+      );
+    }
   }
 
   @override
@@ -33,6 +49,9 @@ class _NewItemState extends State<NewItem> {
             children: [
               TextFormField(
                 maxLength: 50,
+                onSaved: (newValue) {
+                  _enteredName = newValue!;
+                },
                 decoration: const InputDecoration(
                   label: Text("Name"),
                 ),
@@ -51,11 +70,14 @@ class _NewItemState extends State<NewItem> {
                 children: [
                   Expanded(
                     child: TextFormField(
+                      onSaved: (newValue) {
+                        _enteredQuantity = int.parse(newValue!);
+                      },
                       decoration: const InputDecoration(
                         label: Text('Quantity'),
                       ),
                       keyboardType: TextInputType.number,
-                      initialValue: '1',
+                      initialValue: _enteredQuantity.toString(),
                       validator: (strValue) {
                         if (strValue == null ||
                             strValue.isEmpty ||
@@ -70,22 +92,28 @@ class _NewItemState extends State<NewItem> {
                   ),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: DropdownButtonFormField(items: [
-                      for (final category in categories.entries)
-                        DropdownMenuItem(
-                            value: category.value,
-                            child: Row(
-                              children: [
-                                Container(
-                                    width: 24,
-                                    height: 24,
-                                    color: category.value.color),
-                                const SizedBox(width: 10),
-                                Text(category.value.title),
-                              ],
-                            ))
-                    ], onChanged: (val) {}),
-                  )
+                    child: DropdownButtonFormField(
+                        value: _selectedCategory,
+                        items: [
+                          for (final category in categories.entries)
+                            DropdownMenuItem(
+                              value: category.value,
+                              child: Row(
+                                children: [
+                                  Container(
+                                      width: 24,
+                                      height: 24,
+                                      color: category.value.color),
+                                  const SizedBox(width: 10),
+                                  Text(category.value.title),
+                                ],
+                              ),
+                            ),
+                        ],
+                        onChanged: (value) {
+                          _selectedCategory = value!;
+                        }),
+                  ),
                 ],
               ),
               const SizedBox(height: 20),
