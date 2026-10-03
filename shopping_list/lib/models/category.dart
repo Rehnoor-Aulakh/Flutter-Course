@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class Category {
-  final String name;
+  final String title;
   final Color color;
-  const Category(this.name, this.color);
+  const Category(this.title, this.color);
 }
 
 enum Categories {
