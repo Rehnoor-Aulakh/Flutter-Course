@@ -35,11 +35,9 @@ class _GroceryListState extends State<GroceryList> {
         actions: [IconButton(onPressed: _addItem, icon: const Icon(Icons.add))],
       ),
       body: _groceryItems.isEmpty
-          ? Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              margin: const EdgeInsets.only(top: 250),
-              child: const Text(
-                "Uh Oh, no items added. Start by adding items",
+          ? const Center(
+              child: Text(
+                "No items added yet.",
                 style: TextStyle(fontSize: 16),
               ),
             )
@@ -49,7 +47,7 @@ class _GroceryListState extends State<GroceryList> {
                 key: ValueKey(_groceryItems[index]),
                 background: Container(
                   color: Theme.of(context).colorScheme.error.withOpacity(0.75),
-                  margin: EdgeInsets.symmetric(horizontal: 4),
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
                 ),
                 onDismissed: (direction) {
                   // remove the _groceryItems[index] from the List
