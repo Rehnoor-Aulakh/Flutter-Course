@@ -26,7 +26,7 @@ class _GroceryListState extends State<GroceryList> {
 
   void _loadItems() async {
     final url = Uri.https(
-        "fluter-prep-204b5-default-rtdb.firebaseio.com", 'shopping-list.json');
+        "flutter-prep-204b5-default-rtdb.firebaseio.com", 'shopping-list.json');
 
     try {
       final response = await http.get(url);
