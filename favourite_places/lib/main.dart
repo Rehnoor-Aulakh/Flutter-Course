@@ -1,8 +1,10 @@
+import 'package:favourite_places/screens/places.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 final colorScheme = ColorScheme.fromSeed(
@@ -12,19 +14,25 @@ final colorScheme = ColorScheme.fromSeed(
 );
 
 final theme = ThemeData().copyWith(
-    scaffoldBackgroundColor: colorScheme.surface,
-    colorScheme: colorScheme,
-    textTheme: GoogleFonts.ubuntuCondensedTextTheme().copyWith(
-      titleSmall: GoogleFonts.ubuntuCondensed(
-        fontWeight: FontWeight.bold,
-      ),
-      titleMedium: GoogleFonts.ubuntuCondensed(
-        fontWeight: FontWeight.bold,
-      ),
-      titleLarge: GoogleFonts.ubuntuCondensed(
-        fontWeight: FontWeight.bold,
-      ),
-    ));
+  scaffoldBackgroundColor: colorScheme.surface,
+  appBarTheme: AppBarTheme(color: colorScheme.onPrimary),
+  colorScheme: colorScheme,
+  textTheme: GoogleFonts.ubuntuCondensedTextTheme().copyWith(
+    titleSmall: GoogleFonts.ubuntuCondensed(
+      fontWeight: FontWeight.bold,
+    ),
+    titleMedium: GoogleFonts.ubuntuCondensed(
+      fontWeight: FontWeight.bold,
+    ),
+    titleLarge: GoogleFonts.ubuntuCondensed(
+      fontWeight: FontWeight.bold,
+    ),
+    labelMedium: GoogleFonts.ubuntuCondensed(
+      fontWeight: FontWeight.normal,
+      fontSize: 16,
+    ),
+  ),
+);
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -34,11 +42,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Great Places',
       theme: theme,
-      home: const Scaffold(
-        body: Center(
-          child: Text("heellloo"),
-        ),
-      ),
+      home: const PlacesScreen(),
     );
   }
 }
