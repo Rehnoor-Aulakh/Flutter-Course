@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:favourite_places/providers/user_places.dart';
+import 'package:favourite_places/widgets/image_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -13,6 +16,7 @@ class AddPlaceScreen extends ConsumerStatefulWidget {
 
 class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
   final _titleController = TextEditingController();
+  File? _selectedImage;
 
   @override
   void dispose() {
@@ -23,10 +27,12 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
   void _savePlace() {
     // call the provider to add a new place to the PlacesProvider
     final enteredText = _titleController.text;
-    if (enteredText.isEmpty) {
+    if (enteredText.isEmpty || _selectedImage == null) {
       return;
     }
-    ref.read(userPlacesProvider.notifier).addPlace(enteredText);
+    ref
+        .read(userPlacesProvider.notifier)
+        .addPlace(enteredText, _selectedImage!);
     Navigator.of(context).pop();
   }
 
@@ -46,6 +52,14 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
                 label: Text('Title'),
               ),
               style: Theme.of(context).textTheme.labelMedium,
+            ),
+            const SizedBox(height: 20),
+            // Image Input
+            // onPickImage receives an image from the image input and stores it in the local variable image
+            ImageInput(
+              onPickImage: (image) {
+                _selectedImage = image;
+              },
             ),
             const SizedBox(height: 20),
             Container(
