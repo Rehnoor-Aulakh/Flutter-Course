@@ -1,4 +1,5 @@
 import 'package:favourite_places/models/place.dart';
+import 'package:favourite_places/screens/map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -29,11 +30,42 @@ class PlaceDetailScreen extends StatelessWidget {
               height: double.infinity,
             ),
             Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
               child: Column(
                 children: [
-                  CircleAvatar(
-                    radius: 70,
-                    backgroundImage: NetworkImage(locationImage),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (ctx) => MapScreen(
+                            location: place.location,
+                            isSelecting: false,
+                          ),
+                        ),
+                      );
+                    },
+                    child: CircleAvatar(
+                      radius: 70,
+                      backgroundColor:
+                          Theme.of(context).colorScheme.primaryContainer,
+                      child: ClipOval(
+                        child: Image.network(
+                          locationImage,
+                          fit: BoxFit.cover,
+                          width: 140,
+                          height: 140,
+                          errorBuilder: (ctx, error, stackTrace) => Icon(
+                            Icons.map,
+                            size: 40,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onPrimaryContainer,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                   Container(
                     alignment: Alignment.center,
@@ -55,9 +87,6 @@ class PlaceDetailScreen extends StatelessWidget {
                   )
                 ],
               ),
-              bottom: 0,
-              left: 0,
-              right: 0,
             )
           ],
         ));
