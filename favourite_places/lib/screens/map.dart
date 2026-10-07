@@ -9,7 +9,7 @@ class MapScreen extends StatefulWidget {
   const MapScreen(
       {super.key,
       this.location =
-          const PlaceLocation(latitude: 37.422, longitude: -122, addresss: ''),
+          const PlaceLocation(latitude: 37.422, longitude: -122, address: ''),
       this.isSelecting = true});
   @override
   State<MapScreen> createState() {
@@ -37,11 +37,13 @@ class _MapScreenState extends State<MapScreen> {
         ],
       ),
       body: GoogleMap(
-        onTap: (position) {
-          setState(() {
-            _pickedLocation = position;
-          });
-        },
+        onTap: !widget.isSelecting
+            ? null
+            : (position) {
+                setState(() {
+                  _pickedLocation = position;
+                });
+              },
         initialCameraPosition: CameraPosition(
           target: LatLng(widget.location.latitude, widget.location.longitude),
           zoom: 16,

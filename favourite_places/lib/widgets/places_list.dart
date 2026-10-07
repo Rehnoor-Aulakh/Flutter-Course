@@ -40,11 +40,11 @@ class PlacesList extends StatelessWidget {
               .copyWith(color: Theme.of(context).colorScheme.onSurface),
         ),
         subtitle: Text(
-          places[index].location.addresss,
+          places[index].location.address,
           style: Theme.of(context)
               .textTheme
               .bodySmall!
-              .copyWith(  color: Theme.of(context).colorScheme.onSurface),
+              .copyWith(color: Theme.of(context).colorScheme.onSurface),
         ),
       ),
     );

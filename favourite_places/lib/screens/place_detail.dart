@@ -80,7 +80,7 @@ class PlaceDetailScreen extends StatelessWidget {
                     ),
                     child: Text(
                       textAlign: TextAlign.center,
-                      place.location.addresss,
+                      place.location.address,
                       style: Theme.of(context).textTheme.titleLarge!.copyWith(
                           color: Theme.of(context).colorScheme.onSurface),
                     ),

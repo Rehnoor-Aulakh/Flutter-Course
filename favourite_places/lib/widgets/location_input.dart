@@ -37,7 +37,7 @@ class _LocationInputState extends State<LocationInput> {
     final response = await http.get(url);
     final responseData = json.decode(response.body);
 
-    String address = 'Address not available (Google Maps API failed)';
+    String address = 'Lat: $lat, Lng: $lng';
     if (responseData['results'] != null && responseData['results'].isNotEmpty) {
       address = responseData['results'][0]['formatted_address'];
     } else {
@@ -46,7 +46,7 @@ class _LocationInputState extends State<LocationInput> {
 
     setState(() {
       _pickedLocation =
-          PlaceLocation(latitude: lat, longitude: lng, addresss: address);
+          PlaceLocation(latitude: lat, longitude: lng, address: address);
       widget.onSelectLocation(_pickedLocation!);
     });
   }
