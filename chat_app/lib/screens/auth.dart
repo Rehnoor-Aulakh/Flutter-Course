@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -17,7 +18,9 @@ class _AuthScreenState extends State<AuthScreen> {
 
   var _isLogin = true;
   var _enteredEmail = '';
+  var _enteredUsername = '';
   var _enteredPassword = '';
+  var _isAuthenticating = false;
 
   void _submit() async {
     final isValid = _form.currentState!.validate();
@@ -26,14 +29,33 @@ class _AuthScreenState extends State<AuthScreen> {
 
     _form.currentState!.save();
 
-    if (_isLogin) {
-      // log users in
-    } else {
+    try {
+      setState(() {
+        _isAuthenticating = true;
+      });
       // behind the scenes, the SDK methods call the http rest api
-      try {
+      if (_isLogin) {
+        final userCredentials = await _firebase.signInWithEmailAndPassword(
+            email: _enteredEmail, password: _enteredPassword);
+      } else {
         final userCredentials = await _firebase.createUserWithEmailAndPassword(
             email: _enteredEmail, password: _enteredPassword);
-      } catch (error) {}
+
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userCredentials.user!.uid)
+            .set({
+          'username': _enteredUsername,
+          'email': _enteredEmail,
+        });
+      }
+    } on FirebaseAuthException catch (error) {
+      if (error.code == 'email-already-in-use') {
+        // ...
+      }
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(error.message ?? 'Authentication failed')));
     }
   }
 
@@ -80,6 +102,23 @@ class _AuthScreenState extends State<AuthScreen> {
                                 _enteredEmail = value!;
                               },
                             ),
+                            if (!_isLogin)
+                              TextFormField(
+                                decoration: const InputDecoration(
+                                    labelText: "Email Username"),
+                                enableSuggestions: false,
+                                validator: (value) {
+                                  if (value == null ||
+                                      value.isEmpty ||
+                                      value.trim().length < 4) {
+                                    return "Please enter a valid username.";
+                                  }
+                                  return null;
+                                },
+                                onSaved: (value) {
+                                  _enteredUsername = value!;
+                                },
+                              ),
                             TextFormField(
                               decoration: const InputDecoration(
                                   labelText: "Email Password"),
@@ -101,25 +140,30 @@ class _AuthScreenState extends State<AuthScreen> {
                             const SizedBox(
                               height: 12,
                             ),
-                            ElevatedButton(
-                              onPressed: _submit,
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor:
-                                      Theme.of(context).colorScheme.primary,
-                                  foregroundColor:
-                                      Theme.of(context).colorScheme.onPrimary),
-                              child: Text(_isLogin ? 'Login' : 'Signup'),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                setState(() {
-                                  _isLogin = !_isLogin;
-                                });
-                              },
-                              child: Text(_isLogin
-                                  ? 'Create an account'
-                                  : "I already have an account. Login."),
-                            )
+                            if (_isAuthenticating)
+                              const CircularProgressIndicator(),
+                            if (!_isAuthenticating)
+                              ElevatedButton(
+                                onPressed: _submit,
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        Theme.of(context).colorScheme.primary,
+                                    foregroundColor: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimary),
+                                child: Text(_isLogin ? 'Login' : 'Signup'),
+                              ),
+                            if (!_isAuthenticating)
+                              TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _isLogin = !_isLogin;
+                                  });
+                                },
+                                child: Text(_isLogin
+                                    ? 'Create an account'
+                                    : "I already have an account. Login."),
+                              )
                           ],
                         )),
                   ),
