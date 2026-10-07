@@ -23,6 +23,8 @@ class _NewMessageState extends State<NewMessage> {
     final _enteredMessage = _messageController.text;
 
     if (_enteredMessage.trim().isEmpty) return;
+    FocusScope.of(context).unfocus();
+    _messageController.clear();
 
     final user = FirebaseAuth.instance.currentUser;
     final userData = await FirebaseFirestore.instance
@@ -37,7 +39,7 @@ class _NewMessageState extends State<NewMessage> {
       'username': userData.data()!['username'],
     });
 
-    _messageController.clear();
+    // close the keyboard
   }
 
   @override
